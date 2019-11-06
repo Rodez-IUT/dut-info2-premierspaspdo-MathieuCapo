@@ -18,7 +18,7 @@
 	}
 	echo "<table border=\"1px\" width=\"100%\">";
 	echo "<tr><td>Id</td><td>Username</td><td>Email</td><td>status</td>";
-	$stmt = $pdo->query('SELECT * FROM users ORDER BY username');
+	$stmt = $pdo->query('SELECT users.id, username, email, name FROM users JOIN status ON users.status_id = status.id ORDER BY username');
 	$stmt->execute();
 	while ($row = $stmt->fetch())
 	{
@@ -26,7 +26,7 @@
 		echo "<td>".$row['id']."</td>";
 		echo "<td>".$row['username']."</td>";
 		echo "<td>".$row['email']."</td>";
-		echo "<td>".$row['status_id']."</td>"; // faut que ça corresponde au status dans l'autre table ( pas au nombre)
+		echo "<td>".$row['name']."</td>";
 		echo "</tr>";
 	}
 	echo "</table>";
