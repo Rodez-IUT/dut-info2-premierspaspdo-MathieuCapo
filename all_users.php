@@ -12,6 +12,37 @@
 		PDO::ATTR_EMULATE_PREPARES   => false,
 	];
 	
+	if (isset($_POST['lettre'])) {
+		$lettre = $_POST['lettre']."%";
+	} else {
+		$lettre='%';
+	}
+	if (isset($_POST['type'])) {
+		$status =$_POST['type'];
+	} else {
+		$status='%';
+	}
+?>
+<html>
+	<head>
+	
+	</head>
+	<body>
+		<div class="formulaire">
+			<form action='all_users.php' method='post'>
+				premiere lettre : <input type="text" name="lettre"/>
+				status du compte : <select name="type">
+					 <option value="Active Account">Active Account</option>
+					<option value="Waiting for account validation">Waiting for account validation</option>
+				</select>
+				<input type="submit" value="Chercher !"/>
+			</form>
+		</div>
+	</body>
+
+
+<?php
+	
 	try {
 		$pdo = new PDO($dsn, $user, $pass, $options);
 	} catch (PDOException $e) {
@@ -22,8 +53,8 @@
 	$stmt = $pdo->query("SELECT users.id, username, email, name 
 						FROM users 
 						JOIN status ON users.status_id = status.id 
-						WHERE name = 'Active account'
-						AND username LIKE 'e%'
+						WHERE name LIKE '$status'
+						AND username LIKE '$lettre'
 						ORDER BY username 
 						");
 	$stmt->execute();
@@ -39,3 +70,4 @@
 	echo "</table>";
   
 ?>
+</html>
