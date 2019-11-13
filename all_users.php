@@ -4,7 +4,6 @@
 	$user = 'root';
 	$pass = 'root';
 	$charset = 'utf8';
-	$port =8080;
 	$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 	$options = [
 		PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
@@ -13,12 +12,12 @@
 	];
 	
 	if (isset($_POST['lettre'])) {
-		$lettre = $_POST['lettre']."%";
+		$lettre = htmlspecialchars($_POST['lettre'])."%";
 	} else {
 		$lettre='%';
 	}
 	if (isset($_POST['type'])) {
-		$status =$_POST['type'];
+		$status =htmlspecialchars($_POST['type']);
 	} else {
 		$status='%';
 	}
@@ -53,8 +52,8 @@
 	$stmt = $pdo->query("SELECT users.id, username, email, name 
 						FROM users 
 						JOIN status ON users.status_id = status.id 
-						WHERE name LIKE '$status'
-						AND username LIKE '$lettre'
+						WHERE name LIKE '".$status."'
+						AND username LIKE '".$lettre."'
 						ORDER BY username 
 						");
 	$stmt->execute();
