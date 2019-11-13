@@ -18,8 +18,14 @@
 	   throw new PDOException($e->getMessage(), (int)$e->getCode());
 	}
 	echo "<table border=\"1px\" width=\"100%\">";
-	echo "<tr><td>Id</td><td>Username</td><td>Email</td><td>status</td>";
-	$stmt = $pdo->query('SELECT users.id, username, email, name FROM users JOIN status ON users.status_id = status.id ORDER BY username');
+	echo "<tr><td>Id</td><td>Username</td><td>Email</td><td>Status</td>";
+	$stmt = $pdo->query("SELECT users.id, username, email, name 
+						FROM users 
+						JOIN status ON users.status_id = status.id 
+						WHERE name = 'Active account'
+						AND username LIKE 'e%'
+						ORDER BY username 
+						");
 	$stmt->execute();
 	while ($row = $stmt->fetch())
 	{
