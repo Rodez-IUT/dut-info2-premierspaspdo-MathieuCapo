@@ -31,8 +31,9 @@
 			<form action='all_users.php' method='post'>
 				premiere lettre : <input type="text" name="lettre"/>
 				status du compte : <select name="type">
-					 <option value="Active Account">Active Account</option>
+					<option value="Active Account">Active Account</option>
 					<option value="Waiting for account validation">Waiting for account validation</option>
+					<option value="Waiting for account deletion"> Waiting for account deletion </option>
 				</select>
 				<input type="submit" value="Chercher !"/>
 			</form>
