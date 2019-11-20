@@ -10,7 +10,11 @@
 		PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
 		PDO::ATTR_EMULATE_PREPARES   => false,
 	];
-	
+	try {
+		$pdo = new PDO($dsn, $user, $pass, $options);
+	} catch (PDOException $e) {
+	   throw new PDOException($e->getMessage(), (int)$e->getCode());
+	}
 	if (isset($_POST['lettre'])) {
 		$lettre = htmlspecialchars($_POST['lettre'])."%";
 	} else {
@@ -20,6 +24,30 @@
 		$status =htmlspecialchars($_POST['type']);
 	} else {
 		$status='%';
+	}
+	
+	if(isset($_GET['status_id']) && isset($_GET['user_id']) && isset($_GET['action'])) {
+		$action = $_GET['action'];
+		$user_id = $_GET['user_id'];
+		try {
+			$pdo->beginTransaction();
+			$stmt = $pdo->prepare('INSERT INTO action_log (action_date, action_name, user_id) 
+								VALUES ("'.date("Y-m-d H:i:s").'",?,?)');
+			$stmt->execute(["$action","$user_id"]);
+			$pdo->commit();
+		} catch (Exception $e){
+			$pdo->rollBack();
+			throw $e;
+		}
+		try {
+			$pdo->beginTransaction();
+			$stmt = $pdo->prepare('UPDATE users SET status_id = 3 WHERE id =?');
+			$stmt->execute(["$user_id"]);
+			$pdo->commit();
+		} catch (Exception $e){
+			$pdo->rollBack();
+			throw $e;
+		}
 	}
 ?>
 <html>
@@ -43,11 +71,7 @@
 
 <?php
 	
-	try {
-		$pdo = new PDO($dsn, $user, $pass, $options);
-	} catch (PDOException $e) {
-	   throw new PDOException($e->getMessage(), (int)$e->getCode());
-	}
+	
 	echo "<table border=\"1px\" width=\"100%\">";
 	echo "<tr><td>Id</td><td>Username</td><td>Email</td><td>Status</td>";
 	$stmt = $pdo->prepare('SELECT users.id, username, email, name
@@ -65,7 +89,7 @@
 		echo "<td>".$row['email']."</td>";
 		echo "<td>".$row['name']."</td>";
 		if ($row['name'] != "Waiting for account deletion") {
-			echo "<td> <a href=all_users.php?status_id=3&user_id=".$row['id']."&name=askDeletion>askDeletion</a> </td>";
+			echo "<td> <a href=all_users.php?status_id=3&user_id=".$row['id']."&action=askDeletion>askDeletion</a> </td>";
 		}
 		echo "</tr>";
 	}
