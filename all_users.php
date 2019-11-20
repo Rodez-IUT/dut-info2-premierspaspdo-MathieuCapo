@@ -1,6 +1,6 @@
 <?php 
 	$host = 'localhost';
-	$db   = 'my_activities';
+	$db   = 'my-activities';
 	$user = 'root';
 	$pass = 'root';
 	$charset = 'utf8';
@@ -49,14 +49,13 @@
 	}
 	echo "<table border=\"1px\" width=\"100%\">";
 	echo "<tr><td>Id</td><td>Username</td><td>Email</td><td>Status</td>";
-	$stmt = $pdo->query("SELECT users.id, username, email, name 
+	$stmt = $pdo->prepare('SELECT users.id, username, email, name 
 						FROM users 
 						JOIN status ON users.status_id = status.id 
-						WHERE name LIKE '".$status."'
-						AND username LIKE '".$lettre."'
-						ORDER BY username 
-						");
-	$stmt->execute();
+						WHERE name LIKE ?
+						AND username LIKE ?
+						ORDER BY username');
+	$stmt->execute([$status, $lettre]);
 	while ($row = $stmt->fetch())
 	{
 		echo "<tr>";
