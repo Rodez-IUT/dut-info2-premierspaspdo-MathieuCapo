@@ -33,7 +33,7 @@
 				status du compte : <select name="type">
 					<option value="Active Account">Active Account</option>
 					<option value="Waiting for account validation">Waiting for account validation</option>
-					<option value="Waiting for account deletion"> Waiting for account deletion </option>
+					<option value="Waiting for account deletion">Waiting for account deletion</option>
 				</select>
 				<input type="submit" value="Chercher !"/>
 			</form>
@@ -50,7 +50,7 @@
 	}
 	echo "<table border=\"1px\" width=\"100%\">";
 	echo "<tr><td>Id</td><td>Username</td><td>Email</td><td>Status</td>";
-	$stmt = $pdo->prepare('SELECT users.id, username, email, name 
+	$stmt = $pdo->prepare('SELECT users.id, username, email, name
 						FROM users 
 						JOIN status ON users.status_id = status.id 
 						WHERE name LIKE ?
@@ -64,6 +64,9 @@
 		echo "<td>".$row['username']."</td>";
 		echo "<td>".$row['email']."</td>";
 		echo "<td>".$row['name']."</td>";
+		if ($row['name'] != "Waiting for account deletion") {
+			echo "<td> <a href=all_users.php?status_id=3&user_id=".$row['id']."&name=askDeletion>askDeletion</a> </td>";
+		}
 		echo "</tr>";
 	}
 	echo "</table>";
