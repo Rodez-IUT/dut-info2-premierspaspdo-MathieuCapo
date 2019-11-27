@@ -1,6 +1,6 @@
 <?php 
 	$host = 'localhost';
-	$db   = 'my-activities';
+	$db   = 'my_activities';
 	$user = 'root';
 	$pass = 'root';
 	$charset = 'utf8';
@@ -39,6 +39,9 @@
 			$pdo->rollBack();
 			throw $e;
 		}
+		
+		new Exception();
+		
 		try {
 			$pdo->beginTransaction();
 			$stmt = $pdo->prepare('UPDATE users SET status_id = 3 WHERE id =?');

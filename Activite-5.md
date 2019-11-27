@@ -1,0 +1,1 @@
+Le programme s'effectue seulement jusqu'à l'exception, puis s'arrête, une partie des requêtes n'est donc pas effectuer. 
