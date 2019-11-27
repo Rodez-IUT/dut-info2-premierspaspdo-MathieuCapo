@@ -33,19 +33,9 @@
 			$pdo->beginTransaction();
 			$stmt = $pdo->prepare('INSERT INTO action_log (action_date, action_name, user_id) 
 								VALUES ("'.date("Y-m-d H:i:s").'",?,?)');
+			$stmt2 = $pdo->prepare('UPDATE users SET status_id = 3 WHERE id =?');
 			$stmt->execute(["$action","$user_id"]);
-			$pdo->commit();
-		} catch (Exception $e){
-			$pdo->rollBack();
-			throw $e;
-		}
-		
-		new Exception();
-		
-		try {
-			$pdo->beginTransaction();
-			$stmt = $pdo->prepare('UPDATE users SET status_id = 3 WHERE id =?');
-			$stmt->execute(["$user_id"]);
+			$stmt2->execute(["$user_id"]);
 			$pdo->commit();
 		} catch (Exception $e){
 			$pdo->rollBack();
